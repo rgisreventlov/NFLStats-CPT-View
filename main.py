@@ -10,7 +10,7 @@ from flask import render_template  # import render_template from "public" flask 
 # import "packages" from "this" project
 from __init__ import app, login_manager  # Definitions initialization
 
-rootUrl = "http://192.168.68.53:8679/api/"
+rootUrl = "http://192.168.68.90:8679/api/"
 
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):

@@ -1,0 +1,112 @@
+{% extends "layouts/base.html" %}
+{% set project = "NFL Team Stats" %}
+ 
+{% block body %}
+
+<h2>NFL Team Stats</h2>
+
+<div class="card-body">
+	<p style="color:red" id="result"></p>
+    <div class="card-text">
+		
+        <script>
+            // prepare URL's to allow easy switch from deployment and localhost
+            //const url = "https://fnvs.duckdns.org/api/nflteam";
+            const url = "http://127.0.0.1:8679/api/nflteam";
+			const resultContainer = document.getElementById("result");
+            const read_fetch = url + '/';
+			const delete_fetch = url + '/delete';
+            
+			function editTeam(teamName){
+                window.location.assign("nfl_team_create?name="+teamName);
+            }
+			
+            
+			function deleteTeam(teamId, teamName) {
+                // prepare fetch options
+				let delete_fetch_url = delete_fetch + "?id="+teamId;
+                const read_options = {
+                method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'omit', // include, *same-origin, omit
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                };     // fetch the data from API
+                fetch(delete_fetch_url, read_options)
+                // response is a RESTful "promise" on any successful fetch
+                .then(response => {
+                    // check for response errors
+                    if (response.status !== 200) {
+						console.log(response);
+						response.json().then(teams => {
+							console.log(teams);
+							resultContainer.innerHTML ="Could not delete team " + teamName +"("+teamId+"). Error: " + teams.message;
+						})
+                        return;
+                    }
+                    // valid response will have json data
+                    response.json().then(teams => {
+                        console.log(teams);
+                        resultContainer.innerHTML ="Successfully deleted team " + teamName +"("+teamId+")";
+						load();
+                    })
+                }) 
+                // catch fetch errors (ie ACCESS to server blocked)
+                .catch(err => {
+					console.error(err);
+					resultContainer.innerHTML = err;
+                });
+            }
+            
+        </script>
+        <h3 class="card-title">Team Stats at a Glance</h3>
+        <div id="teamtable">
+            <table border='1' style='border-collapse: separate;'>
+                <tr>
+                    <th>Team</th>
+                    <th>Division</th>
+                    <th>Games Played</th>
+                    <th>Games Won</th>
+                    <th>Games Lost</th>
+                    <th>Games Drawn</th>
+                    <th>Games Played At Home</th>
+                    <th>Games Played Away</th>
+                    <th>Games Won At Home</th>
+                    <th>Games Won Away</th>
+                    <th>Games Lost At Home</th>
+                    <th>Games Lost Away</th>
+                    <th>Points For</th>
+                    <th>Points Against</th>
+                    <th>Playoffs</th>
+                    <th>Actions</th>
+                </tr>
+                {% for nfl_team in teams_data %}
+                <tr>
+                    <td>{{ nfl_team.team }}</td>
+                    <td>{{ nfl_team.division }}</td>
+                    <td>{{ nfl_team.gamesplayed }}</td>
+                    <td>{{ nfl_team.gameswon }}</td>
+                    <td>{{ nfl_team.gameslost }}</td>
+                    <td>{{ nfl_team.gamesdrawn }}</td>
+                    <td>{{ nfl_team.gamesplayedathome }}</td>
+                    <td>{{ nfl_team.gamesplayedaway }}</td>
+                    <td>{{ nfl_team.gameswonathome }}</td>
+                    <td>{{ nfl_team.gameswonaway }}</td>
+                    <td>{{ nfl_team.gameslostathome }}</td>
+                    <td>{{ nfl_team.gameslostaway }}</td>
+                    <td>{{ nfl_team.pointsfor }}</td>
+                    <td>{{ nfl_team.pointsagainst }}</td>
+                    <td>{{ nfl_team.playoffs }}</td>
+                    <td>
+                        <a href="javascript:editTeam('{{ nfl_team.team }}')"><i style='font-size:24px' class='fas fa-edit'></i></a>
+                        <a href="javascript:deleteTeam('{{ nfl_team.id }}','{{ nfl_team.team }}')"><i style='font-size:24px' class='fas fa-trash'></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

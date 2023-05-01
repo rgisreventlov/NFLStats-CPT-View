@@ -1,75 +1,20 @@
 {% extends "layouts/base.html" %}
-{% set project = "NFL Team Stats" %}
- 
+{% set project = "NFL Team Challenge" %}
 {% block body %}
-
 <table style="width:100%" id="table">
     <tr>
-      <th>Check for your Favorite NFL Team! Your favorite team's statistics will show the number of games they have played, their overall regular season record, and different statistics about the number of points they have scored and allowed. The last column shows if your team made the playoffs! You may also use the match predictor that uses an algorithm to predict which team will win using the team statistics!</th>
+        <th>Check for your Favorite NFL Team! Your favorite team's statistics will show the number of games they have played, their overall regular season record, and different statistics about the number of points they have scored and allowed. The last column shows if your team made the playoffs! You may also use the match predictor that uses an algorithm to predict which team will win using the team statistics!</th>
     </tr>
-  </table>
-  <h2>NFL Team Showdown</h2>
-  
+</table>
+  <h2>NFL Team Showdown</h2>  
   <div class="card-body">
       <p style="color:red" id="result"></p>
       <p class="card-text">
-          <script>
-              function showTeam1Stats(){
-                console.debug("inside showTeam1Stats()");
-                var t1 = document.getElementById("team1_name");
-                var t1Name  = t1.value;                
-                if (t1Name != ""){
-                    console.log("Team1:"+t1Name);
-                    //showStats(text, "team1_stats");
-                    $(document).ready(function() {
-                        $('#team1_stats').load('nfl?name='+encodeURIComponent(t1Name), function( response, status, xhr ) {
-                            if ( status == "success" ) {
-                                var t2 = document.getElementById("team2_name");
-                                var t2Name  = t2.value;
-                                if (t2Name != ""){
-                                    console.log("Team2:"+t1Name);
-                                    $('#result').load('nfl_compare?t1='+encodeURIComponent(t1Name)+'&t2='+encodeURIComponent(t2Name));
-                                }
-                            }
-                        });
-                    });
-                } else {
-                    document.getElementById("team1_stats").innerHTML = "";
-                    team1Vals["team"] = "";
-                    document.getElementById("result").innerHTML="";
-                }
-              }
-              function showTeam2Stats(){
-                console.debug("inside showTeam2Stats()");
-                var t2 = document.getElementById("team2_name");
-                var t2Name  = t2.value;                
-                if (t2Name != ""){
-                    console.log("Team2:"+t2Name);
-                    //showStats(text, "team2_stats");
-                    $(document).ready(function() {
-                        $('#team2_stats').load('nfl?name='+encodeURIComponent(t2Name), function( response, status, xhr ) {
-                            if ( status == "success" ) {
-                                var t1 = document.getElementById("team1_name");
-                                var t1Name  = t1.value;
-                                if (t1Name != ""){
-                                    console.log("Team1:"+t2Name);
-                                    $('#result').load('nfl_compare?t2='+encodeURIComponent(t2Name)+'&t1='+encodeURIComponent(t1Name));
-                                }
-                            }
-                        });
-                    });
-                } else {
-                    document.getElementById("team2_stats").innerHTML = "";
-                    team2Vals["team"] = "";
-                    document.getElementById("result").innerHTML="";
-                }
-              }
-          </script>
           <table id="teams" width="100%">
-              <tr><td>Team</td><td>Challenger</td></tr>
+              <tr><th>Team</th><th>Challenger</th></tr>
               <tr>
                 <td id="team1">
-                    <select name='team1_name' id='team1_name' onchange='showTeam1Stats()' >
+                    <select name='team1_name' id='team1_name' onchange='javascript:showTeam1Stats()' >
                         <option value=''>Select Team</option>
                         {% for nfl_team in teams_data %}
                         <option value='{{ nfl_team.team }}'>{{ nfl_team.team }}</option>
@@ -77,7 +22,7 @@
                     </select>
                 </td>
                 <td id="team2">
-                    <select name='team2_name' id='team2_name' onchange='showTeam2Stats()' >
+                    <select name='team2_name' id='team2_name' onchange='javascript:showTeam2Stats()' >
                         <option value=''>Select Team</option>
                         {% for nfl_team in teams_data %}
                         <option value='{{ nfl_team.team }}'>{{ nfl_team.team }}</option>
